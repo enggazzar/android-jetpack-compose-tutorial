@@ -3,6 +3,11 @@ package com.ksi.examplecompose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -10,6 +15,8 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -18,6 +25,7 @@ import com.ksi.examplecompose.ui.theme.defaultPadding
 import java.util.Collections.list
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -26,11 +34,62 @@ class MainActivity : ComponentActivity() {
                 //hoistable state remove dublicate state
 
                 Surface(color = MaterialTheme.colors.background) {
-                    MyApp()
+                   // MAnimateVisibilty()
                 }
             }
         }
     }
+}
+
+@Composable
+fun AnimateColor() {
+    var isGray by remember { mutableStateOf(false) }
+    val animateColor = animateColorAsState(
+        targetValue = if (isGray) Color.Gray else Color.Green,
+        animationSpec = tween(durationMillis = 3000)
+    )
+    Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
+        Button(onClick = { isGray = !isGray }) {
+            Text(text = "Animate color")
+        }
+        Box(
+            Modifier
+                .size(400.dp)
+                .background(
+                    animateColor.value
+                )
+        ) {
+
+        }
+
+    }
+
+}
+@ExperimentalAnimationApi
+@Composable
+fun MAnimateVisibilty() {
+    var isVisible by remember { mutableStateOf(false) }
+
+    Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
+        Button(onClick = { isVisible = !isVisible }) {
+            Text(text = "Animate color")
+        }
+        AnimatedVisibility(visible = isVisible) {
+            Box(
+                Modifier
+                    .size(400.dp)
+                    .background(
+                        color = Color.Green
+                    )
+            ) {
+
+            }
+        }
+
+
+
+    }
+
 }
 
 @Composable
@@ -39,49 +98,58 @@ fun MyApp() {
     var onBoard by remember {
         mutableStateOf(true)
     }
-    if(onBoard){
-        OnboardingScreen({onBoard=false})
-    }else{
+    if (onBoard) {
+        OnboardingScreen({ onBoard = false })
+    } else {
         Greetings()
     }
 
 }
+
 @Composable
-fun Greetings(names: List<String> =List(1000){"$it"}){
+fun Greetings(names: List<String> = List(1000) { "$it" }) {
     Surface(color = MaterialTheme.colors.background) {
         Column(modifier = Modifier.padding(defaultPadding)) {
             LazyColumn {
-                items(names){name->
+                items(names) { name ->
                     Greeting(name = name)
-                    
-            }
-              
+
+                }
+
             }
         }
     }
 }
+
 @Composable
-fun Greeting(name:String){
+fun Greeting(name: String) {
     //remember to save last value when recompose happened
     //mutablestate will recompose element depond on this value
     //by to delegate
-    var expand by remember {  mutableStateOf(false)}
+    var expand by remember { mutableStateOf(false) }
 
 
-   val expandValue=if(expand) 34.dp else 0.dp
-    Surface(color = MaterialTheme.colors.primary,modifier = Modifier.padding(horizontal = 8.dp ,vertical = 8.dp)) {
-      Row(modifier = Modifier
-          .padding(defaultPadding)) {
-          Column(modifier = Modifier
-              .weight(0.1f)
-              .padding(bottom = expandValue)) {
-              Text(text = "Hello ")
-              Text(text = "$name!")
-          }
-          OutlinedButton(onClick = { expand=!expand }) {
-              Text( if (expand) stringResource(R.string.cc) else "Show More")
-          }
-      }
+    val expandValue = if (expand) 34.dp else 0.dp
+    Surface(
+        color = MaterialTheme.colors.primary,
+        modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(defaultPadding)
+        ) {
+            Column(
+                modifier = Modifier
+                    .weight(0.1f)
+                    .padding(bottom = expandValue)
+            ) {
+                Text(text = "Hello ")
+                Text(text = "$name!")
+            }
+            OutlinedButton(onClick = { expand = !expand }) {
+                Text(if (expand) stringResource(R.string.cc) else "Show More")
+            }
+        }
 
     }
 }
@@ -90,14 +158,15 @@ fun Greeting(name:String){
 @Composable
 fun DefaultPreview() {
     ExampleComposeTheme {
-       // MyApp()
+        // MyApp()
         OnboardingScreen({})
     }
 }
+
 @Composable
-fun OnboardingScreen(onContenueClicked:()->Unit) {
+fun OnboardingScreen(onContenueClicked: () -> Unit) {
     // TODO: This state should be hoisted
-   // var shouldShowOnboarding by remember { mutableStateOf(true) }
+    // var shouldShowOnboarding by remember { mutableStateOf(true) }
 
     Surface {
         Column(
@@ -116,6 +185,7 @@ fun OnboardingScreen(onContenueClicked:()->Unit) {
         }
     }
 }
+
 @Preview(showBackground = true, widthDp = 320, heightDp = 320)
 @Composable
 fun OnboardingPreview() {

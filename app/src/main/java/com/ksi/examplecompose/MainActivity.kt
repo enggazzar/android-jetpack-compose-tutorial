@@ -3,9 +3,7 @@ package com.ksi.examplecompose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -34,7 +32,7 @@ class MainActivity : ComponentActivity() {
                 //hoistable state remove dublicate state
 
                 Surface(color = MaterialTheme.colors.background) {
-                   // MAnimateVisibilty()
+                    MAnimateContentSize()
                 }
             }
         }
@@ -84,6 +82,63 @@ fun MAnimateVisibilty() {
             ) {
 
             }
+        }
+
+
+
+    }
+
+}
+@ExperimentalAnimationApi
+@Composable
+fun MAnimateVisibiltyMoreOption() {
+    var isVisible by remember { mutableStateOf(false) }
+
+    Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
+        Button(onClick = { isVisible = !isVisible }) {
+            Text(text = "Animate color")
+        }
+        AnimatedVisibility(visible = isVisible
+        , enter = expandIn(tween(durationMillis = 3000)),
+            exit = shrinkOut(tween(durationMillis = 300))
+        ) {
+            Box(
+                Modifier
+                    .size(400.dp)
+                    .background(
+                        color = Color.Green
+                    )
+            ) {
+
+            }
+        }
+
+
+
+    }
+
+}
+@Composable
+fun MAnimateContentSize() {
+    var isShort by remember { mutableStateOf(true) }
+    val short="Iam hello Iam hello Iam hello Iam hello Iam hello Iam hello"
+    val longtxt="Iam hello Iam hello Iam hello Iam hello Iam hello Iam hello Iam hello Iam hello Iam hello Iam hello Iam hello Iam hello Iam hello Iam hello Iam hello Iam hello Iam hello Iam hello"
+    Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
+        Button(onClick = { isShort = !isShort }) {
+            Text(text = "Animate color")
+        }
+
+            Box(
+                Modifier
+                  //  .size(400.dp)
+                    .padding(20.dp)
+                    .animateContentSize (animationSpec = tween(durationMillis = 300) )
+                    .background(
+                        color = Color.Green
+                    )
+            ) {
+                Text(text = if(isShort) short else longtxt)
+
         }
 
 

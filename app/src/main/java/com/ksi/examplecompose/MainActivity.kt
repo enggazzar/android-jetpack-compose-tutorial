@@ -3,25 +3,35 @@ package com.ksi.examplecompose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Arrangement.SpaceAround
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ksi.examplecompose.ui.theme.ExampleComposeTheme
-import com.ksi.examplecompose.ui.theme.defaultPadding
-import java.util.Collections.list
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.ksi.examplecompose.presentation.Screen
+import com.ksi.examplecompose.presentation.coin_detail.CoinDetailScreen
+import com.ksi.examplecompose.presentation.coin_list.CoinListScreen
+import com.ksi.examplecompose.presentation.theme.ExampleComposeTheme
+import com.ksi.examplecompose.presentation.theme.defaultPadding
+import dagger.hilt.android.AndroidEntryPoint
+/*
+routing
+rules
+pagination
+button nav
+toolbar
+dialog
+game of rich
+ */
+@AndroidEntryPoint
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,122 +42,13 @@ class MainActivity : ComponentActivity() {
                 //hoistable state remove dublicate state
 
                 Surface(color = MaterialTheme.colors.background) {
-                    myBox()
+                  //  MyApp()
+                    RouteApp()
                 }
             }
         }
     }
 }
-
-@Composable
-fun myTextField() {
-    var textValue by remember {
-        mutableStateOf("")
-    }
-    TextField(value = textValue, onValueChange = { text -> textValue = text },
-        label = { Text(text = "this label") }
-    )
-}
-
-@Composable
-fun myOutLineTextField() {
-    var textValue by remember {
-        mutableStateOf("")
-    }
-    OutlinedTextField(value = textValue, onValueChange = { text -> textValue = text },
-        label = { Text(text = stringResource(R.string.label)) },
-        keyboardOptions= KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedLabelColor = colorResource(id = R.color.purple_500),
-            focusedBorderColor =  colorResource(id = R.color.purple_700)
-        )
-    )
-}
-//onclick must send
-@Composable
-fun MyButton(){
-    Button(onClick = { /*TODO*/ }
-        ) 
-    
-    {
-        Text(text = "Click Me")
-    }
-}
-@Composable
-fun myRadioGroup(){
-    val radioButtons= listOf(0,1,2)
-
-    var selectedxtedButton by remember {
-        mutableStateOf(radioButtons.first())
-    }
-    val colors= RadioButtonDefaults.colors(
-        selectedColor = colorResource(id = R.color.purple_500),
-        unselectedColor = colorResource(id = R.color.black)
-    )
-    Column() {
-        radioButtons.forEach { index->
-            val isSelected=index==selectedxtedButton
-            RadioButton(selected =isSelected , onClick = { selectedxtedButton=index })
-        }
-
-    }
-}
-@Composable
-fun myFloatingActionButton(){
-    FloatingActionButton(onClick = { /*TODO*/ },
-          content = {Text(text = "Fab")},
-        contentColor = colorResource(id = R.color.purple_700)
-        )
-    
-
-
-}
-// horizontalArrangement = Arrangement.SpaceBetween order item  horizontal
-@Composable
-fun myRow(){
-    Row(modifier= Modifier.fillMaxSize().background(color= Color.Green),
-    horizontalArrangement = Arrangement.SpaceBetween,
-    verticalAlignment = Alignment.CenterVertically)
-    {
-        Text(text = "one")
-        Text(text = "tow")
-        Text(text = "three")
-        
-    }
-}
-@Composable
-fun myColumn(){
-    Column(modifier= Modifier.fillMaxSize().background(color= Color.Green))
-      // verticalArrangement = Arrangement.SpaceAround
-
-    {
-        Text(text = "one")
-        Text(text = "tow")
-        Text(text = "three")
-
-    }
-}
-//box like frame layout
-@Composable
-fun myBox(){
-    Box(modifier= Modifier.fillMaxSize().background(color= Color.Green))
-    // verticalArrangement = Arrangement.SpaceAround
-
-    {
-        Text(
-            text = "one",
-            modifier = Modifier.align(Alignment.TopStart)
-        )
-        Text(text = "tow",
-            modifier = Modifier.align(Alignment.Center)
-        )
-        Text(text = "three",
-        modifier = Modifier.align(Alignment.BottomEnd)
-            )
-
-    }
-}
-
 
 @Composable
 fun MyApp() {
@@ -155,58 +56,49 @@ fun MyApp() {
     var onBoard by remember {
         mutableStateOf(true)
     }
-    if (onBoard) {
-        OnboardingScreen({ onBoard = false })
-    } else {
+    if(onBoard){
+        OnboardingScreen({onBoard=false})
+    }else{
         Greetings()
     }
 
 }
-
 @Composable
-fun Greetings(names: List<String> = List(1000) { "$it" }) {
+fun Greetings(names: List<String> =List(1000){"$it"}){
     Surface(color = MaterialTheme.colors.background) {
         Column(modifier = Modifier.padding(defaultPadding)) {
             LazyColumn {
-                items(names) { name ->
+                items(names){name->
                     Greeting(name = name)
-
-                }
-
+                    
+            }
+              
             }
         }
     }
 }
-
 @Composable
-fun Greeting(name: String) {
+fun Greeting(name:String){
     //remember to save last value when recompose happened
     //mutablestate will recompose element depond on this value
     //by to delegate
-    var expand by remember { mutableStateOf(false) }
+    var expand by remember {  mutableStateOf(false)}
 
 
-    val expandValue = if (expand) 34.dp else 0.dp
-    Surface(
-        color = MaterialTheme.colors.primary,
-        modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(defaultPadding)
-        ) {
-            Column(
-                modifier = Modifier
-                    .weight(0.1f)
-                    .padding(bottom = expandValue)
-            ) {
-                Text(text = "Hello ")
-                Text(text = "$name!")
-            }
-            OutlinedButton(onClick = { expand = !expand }) {
-                Text(if (expand) stringResource(R.string.cc) else "Show More")
-            }
-        }
+   val expandValue=if(expand) 34.dp else 0.dp
+    Surface(color = MaterialTheme.colors.primary,modifier = Modifier.padding(horizontal = 8.dp ,vertical = 8.dp)) {
+      Row(modifier = Modifier
+          .padding(defaultPadding)) {
+          Column(modifier = Modifier
+              .weight(0.1f)
+              .padding(bottom = expandValue)) {
+              Text(text = "Hello ")
+              Text(text = "$name!")
+          }
+          OutlinedButton(onClick = { expand=!expand }) {
+              Text( if (expand) stringResource(R.string.cc) else "Show More")
+          }
+      }
 
     }
 }
@@ -215,15 +107,14 @@ fun Greeting(name: String) {
 @Composable
 fun DefaultPreview() {
     ExampleComposeTheme {
-        // MyApp()
+       // MyApp()
         OnboardingScreen({})
     }
 }
-
 @Composable
-fun OnboardingScreen(onContenueClicked: () -> Unit) {
+fun OnboardingScreen(onContenueClicked:()->Unit) {
     // TODO: This state should be hoisted
-    // var shouldShowOnboarding by remember { mutableStateOf(true) }
+   // var shouldShowOnboarding by remember { mutableStateOf(true) }
 
     Surface {
         Column(
@@ -242,11 +133,31 @@ fun OnboardingScreen(onContenueClicked: () -> Unit) {
         }
     }
 }
-
 @Preview(showBackground = true, widthDp = 320, heightDp = 320)
 @Composable
 fun OnboardingPreview() {
     ExampleComposeTheme {
         OnboardingScreen({})
+    }
+}
+@Composable
+fun RouteApp(){
+    Surface(color = MaterialTheme.colors.background) {
+        val navController = rememberNavController()
+        NavHost(
+            navController = navController,
+            startDestination = Screen.CoinListScreen.route
+        ) {
+            composable(
+                route = Screen.CoinListScreen.route
+            ) {
+                CoinListScreen(navController)
+            }
+            composable(
+                route = Screen.CoinDetailScreen.route + "/{coinId}"
+            ) {
+                CoinDetailScreen()
+            }
+        }
     }
 }

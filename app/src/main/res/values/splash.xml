@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <style name="Theme.app.starting" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/black</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_baseline_app_settings_alt_24</item>
-        <item name="postSplashScreenTheme">@style/Theme.ExampleCompose.NoActionBar</item>
-    </style>
-</resources>

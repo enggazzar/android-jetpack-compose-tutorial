@@ -89,9 +89,8 @@ fun MAnimateVisibilty() {
     }
 
 }
-@ExperimentalAnimationApi
-@Composable
-fun MAnimateVisibiltyMoreOption() {
+
+/*fun MAnimateVisibiltyMoreOption() {
     var isVisible by remember { mutableStateOf(false) }
 
     Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
@@ -117,7 +116,7 @@ fun MAnimateVisibiltyMoreOption() {
 
     }
 
-}
+}*/
 @Composable
 fun MAnimateContentSize() {
     var isShort by remember { mutableStateOf(true) }

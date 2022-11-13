@@ -1,163 +1,195 @@
 package com.ksi.examplecompose
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.ksi.examplecompose.presentation.Screen
-import com.ksi.examplecompose.presentation.coin_detail.CoinDetailScreen
-import com.ksi.examplecompose.presentation.coin_list.CoinListScreen
-import com.ksi.examplecompose.presentation.theme.ExampleComposeTheme
-import com.ksi.examplecompose.presentation.theme.defaultPadding
-import dagger.hilt.android.AndroidEntryPoint
-/*
-routing
-rules
-pagination
-button nav
-toolbar
-dialog
-game of rich
- */
-@AndroidEntryPoint
 
+import androidx.lifecycle.lifecycleScope
+
+import kotlinx.coroutines.*
+import java.util.Collections.list
+import kotlin.system.measureTimeMillis
+/*
+function is sequence of execute instruction from here we need thread
+***********
+what distinguishes coroutines from thread?
+1- executed within thread
+2- coroutines are suspendable
+3-they can switch their context
+---------------
+coroutine is light wight thread with useful functionality
+-----------
+assume there instruction tow places you can suspend worker and back to work also you can switch context to work
+to second instruction place
+-----------------
+many coroutine not give out of memory but many thread give
+-------------
+ */
 class MainActivity : ComponentActivity() {
+    val Tag = "TestCoroutine"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            ExampleComposeTheme {
-                // A surface container using the 'background' color from the theme
-                //hoistable state remove dublicate state
+        Log.e(Tag, "hello from ")
+        // funGloblscope()
+        jobJoin()
 
-                Surface(color = MaterialTheme.colors.background) {
-                  //  MyApp()
-                    RouteApp()
+    }
+
+    fun funGloblscope() {
+        //live as long our application does if finish his job will destroyed without waiting app destoryed
+
+        //delay only suspend current coroutine not block all thread but sleep stop all
+        //if main thread finish maian all thread canceled
+        //delay is suspend function
+        //susbend fuon only called from suspend function or inside coroutine function
+        GlobalScope.launch {
+            delay(3000L)
+            Log.e(Tag, "hello from ${Thread.currentThread().name}")
+            val ans1 = networkCall()
+            val ans2 = networkCall2()
+            //in same coroutine delay will added from to function then execute function
+            Log.e(Tag, ans1)
+            Log.e(Tag, ans2)
+        }
+        Log.e(Tag, "hello from ${Thread.currentThread().name}")
+    }
+
+    suspend fun networkCall(): String {
+        delay(1000L)
+        return "hello from 1"
+    }
+
+    suspend fun networkCall2(): String {
+        delay(1000L)
+        return "hello from 2"
+    }
+
+    /*
+    dispatcher according to what should coroutine should do wh choose type
+    1- main start coroutine in main thread useful with ui operation  because wh can change ui only from ui thread
+    2-IO data operation -read write file or db- network -
+    3- default calculation exampl 10000 element
+    4- Unconfined will
+     */
+    fun dispatcher() {
+        GlobalScope.launch(Dispatchers.Unconfined) {
+
+        }
+    }
+
+    fun funRunCoroutineinSingleThread() {
+        GlobalScope.launch(newSingleThreadContext("thread1")) {
+
+        }
+    }
+
+    fun changeContext() {
+        GlobalScope.launch(Dispatchers.IO) {
+            //excuted in io thread
+            val ans1 = networkCall()
+            //change context to main thread to updtae ui
+            withContext(Dispatchers.Main) {
+                //now we in main thread we can update ui
+            }
+        }
+    }
+
+    fun runBlock() {
+        //will block main thread if you not care about synchronize  used for test
+        //only effect main thread
+        Log.e(Tag, "before")
+        runBlocking {
+            Log.e(Tag, "start")
+            delay(100L)
+        }
+        //will print after delay
+        Log.e(Tag, "after run block")
+    }
+
+    fun jobJoin() {
+        val job = GlobalScope.launch {
+            repeat(5) {
+                Log.e(Tag, "Still working")
+                delay(1000L)
+            }
+
+        }
+        runBlocking {
+            job.join()
+            //wait until job finished
+            Log.e(Tag, "finished")
+        }
+    }
+
+    fun jobCancel() {
+        val job = GlobalScope.launch {
+            repeat(5) {
+                Log.e(Tag, "Still working")
+                delay(1000L)
+            }
+
+        }
+        runBlocking {
+            delay(2000L)
+            job.cancel()
+            //wait until job finished
+            Log.e(Tag, "finished")
+        }
+    }
+
+    fun jobCancelCheckIsActive() {
+        val job = GlobalScope.launch {
+            for (i in 30.. 45){
+                if(isActive){
+                    //do  your function
+                }
+          //if we have function make calcaluation courotine will busy not lisitn to cancell
+                //so we will check is coroutine is active
+        }
+        }
+        runBlocking {
+            delay(2000L)
+            job.cancel()
+            //wait until job finished
+            Log.e(Tag, "finished")
+        }
+    }
+    fun jobCancelWithTimeOut() {
+        val job = GlobalScope.launch {
+            //if function execution not finish before the time coroutine will cancel
+            withTimeout(3000L){
+                for (i in 30.. 45){
+
                 }
             }
+
         }
-    }
-}
 
-@Composable
-fun MyApp() {
-    //remeberSeverabale save value even configer of app changed
-    var onBoard by remember {
-        mutableStateOf(true)
     }
-    if(onBoard){
-        OnboardingScreen({onBoard=false})
-    }else{
-        Greetings()
-    }
-
-}
-@Composable
-fun Greetings(names: List<String> =List(1000){"$it"}){
-    Surface(color = MaterialTheme.colors.background) {
-        Column(modifier = Modifier.padding(defaultPadding)) {
-            LazyColumn {
-                items(names){name->
-                    Greeting(name = name)
-                    
-            }
-              
+    //async to execute to suspend function in same time
+    fun ayncExamaple() {
+        val time= measureTimeMillis {
+            GlobalScope.launch {
+                //return deferred string
+                val ans1=async{networkCall()}
+                val ans2=async{networkCall2()}
+                Log.e(Tag, ans1.await())
+                Log.e(Tag, ans2.await())
             }
         }
-    }
-}
-@Composable
-fun Greeting(name:String){
-    //remember to save last value when recompose happened
-    //mutablestate will recompose element depond on this value
-    //by to delegate
-    var expand by remember {  mutableStateOf(false)}
+        Log.e(Tag, "request talk $time")
 
-
-   val expandValue=if(expand) 34.dp else 0.dp
-    Surface(color = MaterialTheme.colors.primary,modifier = Modifier.padding(horizontal = 8.dp ,vertical = 8.dp)) {
-      Row(modifier = Modifier
-          .padding(defaultPadding)) {
-          Column(modifier = Modifier
-              .weight(0.1f)
-              .padding(bottom = expandValue)) {
-              Text(text = "Hello ")
-              Text(text = "$name!")
-          }
-          OutlinedButton(onClick = { expand=!expand }) {
-              Text( if (expand) stringResource(R.string.cc) else "Show More")
-          }
-      }
 
     }
-}
+    fun lifeCycleCoroutine(){
+        //work under this activity only
+        /*
+        implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
+      implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
+         */
+        lifecycleScope.launch{
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    ExampleComposeTheme {
-       // MyApp()
-        OnboardingScreen({})
-    }
-}
-@Composable
-fun OnboardingScreen(onContenueClicked:()->Unit) {
-    // TODO: This state should be hoisted
-   // var shouldShowOnboarding by remember { mutableStateOf(true) }
-
-    Surface {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-
-        ) {
-            Text("Welcome to the Basics Codelab!")
-            Button(
-                modifier = Modifier.padding(vertical = 24.dp),
-                onClick = onContenueClicked
-            ) {
-                Text("Continue")
-            }
         }
     }
-}
-@Preview(showBackground = true, widthDp = 320, heightDp = 320)
-@Composable
-fun OnboardingPreview() {
-    ExampleComposeTheme {
-        OnboardingScreen({})
-    }
-}
-@Composable
-fun RouteApp(){
-    Surface(color = MaterialTheme.colors.background) {
-        val navController = rememberNavController()
-        NavHost(
-            navController = navController,
-            startDestination = Screen.CoinListScreen.route
-        ) {
-            composable(
-                route = Screen.CoinListScreen.route
-            ) {
-                CoinListScreen(navController)
-            }
-            composable(
-                route = Screen.CoinDetailScreen.route + "/{coinId}"
-            ) {
-                CoinDetailScreen()
-            }
-        }
-    }
+
 }

@@ -1,4 +1,4 @@
-package com.ksi.examplecompose.presentation.theme
+package com.ksi.examplecompose.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme

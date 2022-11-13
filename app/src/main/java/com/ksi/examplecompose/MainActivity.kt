@@ -3,6 +3,7 @@ package com.ksi.examplecompose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -12,148 +13,72 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ksi.examplecompose.ui.screen.HomseScreenUi
-import com.ksi.examplecompose.ui.theme.*
+import com.ksi.examplecompose.ui.theme.ExampleComposeTheme
+import com.ksi.examplecompose.ui.theme.customTitle
+import com.ksi.examplecompose.ui.theme.dropdownText
+import com.ksi.examplecompose.ui.theme.inputButton
 import java.util.Collections.list
 
+/*
+https://material.io/design/color/the-color-system.html#tools-for-picking-colors
+  <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        only one we need to change from xml theme file
+        https://developer.android.com/reference/kotlin/androidx/compose/material/Colors
+https://stackoverflow.com/questions/45879513/what-is-the-difference-between-colorprimary-and-colorprimarydark-in-themes
+https://developer.android.com/reference/kotlin/androidx/compose/material/Typography
+
+
+ */
+val defaultPadding=24.dp
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             ExampleComposeTheme {
-                // A surface container using the 'background' color from the theme
-                //hoistable state remove dublicate state
 
                 Surface(color = MaterialTheme.colors.background) {
-                    HomseScreenUi()
+                   MyApp()
+
+
+                 /*   Text(
+                        text = "vv",
+                        style = inputButton.copy(color = if (true) Color.Red else Color.Green)
+                    )*/
+
+                   // MyApp()
                 }
             }
         }
     }
 }
-
+@Preview()
 @Composable
 fun MyApp() {
-    //remeberSeverabale save value even configer of app changed
-    var onBoard by remember {
-        mutableStateOf(true)
+    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+        //style
+
+        Text(text = "inputButton", style = inputButton)
+        Text(text = "body", style = MaterialTheme.typography.body1)
+        Text(text = "customTitle", style = MaterialTheme.typography.customTitle)
+        Text(text = "dropdownText", style = dropdownText(Color.Red))
+        //====color========//
+        Text(text = "color red", color = Color.Red)
+        Text(text = "colors.primary", color = MaterialTheme.colors.primary)
+        //===shape==================//
+        Box(
+            modifier = Modifier
+                .size(100.dp)
+                .clip(MaterialTheme.shapes.medium)
+                .background(Color.Red)
+        )
     }
-    if(onBoard){
-        OnboardingScreen({onBoard=false})
-    }else{
-        Greetings()
-    }
+
+
 
 }
-@Composable
-fun Greetings(names: List<String> =List(1000){"$it"}){
-    Surface(color = MaterialTheme.colors.background) {
-        Column(modifier = Modifier.padding(defaultPadding)) {
-            LazyColumn {
-                items(names){name->
-                    Greeting(name = name)
-                    
-            }
-              
-            }
-        }
-    }
-}
-@Composable
-fun Greeting(name:String){
-    //remember to save last value when recompose happened
-    //mutablestate will recompose element depond on this value
-    //by to delegate
-    var expand by remember {  mutableStateOf(false)}
 
 
-   val expandValue=if(expand) 34.dp else 0.dp
-    Surface(color = MaterialTheme.colors.primary,modifier = Modifier.padding(horizontal = 8.dp ,vertical = 8.dp)) {
-      Row(modifier = Modifier
-          .padding(defaultPadding)) {
-          Column(modifier = Modifier
-              .weight(0.1f)
-              .padding(bottom = expandValue)) {
-              Text(text = "Hello ")
-              Text(text = "$name!")
-          }
-          OutlinedButton(onClick = { expand=!expand }) {
-              Text( if (expand) stringResource(R.string.cc) else "Show More")
-          }
-      }
-
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    ExampleComposeTheme {
-       // MyApp()
-        OnboardingScreen({})
-    }
-}
-@Composable
-fun SearchBox() {
-    var text by remember { mutableStateOf("") }
-
-    TextField(
-        value = text,
-        onValueChange = {
-            text = it
-        },
-        label = null,
-        placeholder = { Text("Search") },
-        colors = TextFieldDefaults.textFieldColors(
-            backgroundColor = White,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent
-        ),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp)
-            .padding(top = 20.dp, bottom = 8.dp)
-            .clip(SearchShape.medium),
-        leadingIcon = {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_search),
-                contentDescription = "",
-                tint = LightText,
-                modifier = Modifier.size(20.dp)
-            )
-        }
-    )
-}
-@Composable
-fun OnboardingScreen(onContenueClicked:()->Unit) {
-    // TODO: This state should be hoisted
-   // var shouldShowOnboarding by remember { mutableStateOf(true) }
-
-    Surface {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-
-        ) {
-            Text("Welcome to the Basics Codelab!")
-            Button(
-                modifier = Modifier.padding(vertical = 24.dp),
-                onClick = onContenueClicked
-            ) {
-                Text("Continue")
-            }
-        }
-    }
-}
-@Preview(showBackground = true, widthDp = 320, heightDp = 320)
-@Composable
-fun OnboardingPreview() {
-    ExampleComposeTheme {
-        OnboardingScreen({})
-    }
-}

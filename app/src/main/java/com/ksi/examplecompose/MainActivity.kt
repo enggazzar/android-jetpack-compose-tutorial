@@ -3,26 +3,19 @@ package com.ksi.examplecompose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Arrangement.SpaceAround
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ksi.examplecompose.ui.theme.ExampleComposeTheme
@@ -30,6 +23,7 @@ import com.ksi.examplecompose.ui.theme.defaultPadding
 import java.util.Collections.list
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -38,8 +32,7 @@ class MainActivity : ComponentActivity() {
                 //hoistable state remove dublicate state
 
                 Surface(color = MaterialTheme.colors.background) {
-                  //  myScafold()
-                    myLazyColumn()
+                    MAnimateContentSize()
                 }
             }
         }
@@ -47,198 +40,111 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun myTextField() {
-    var textValue by remember {
-        mutableStateOf("")
-    }
-    TextField(value = textValue, onValueChange = { text -> textValue = text },
-        label = { Text(text = "this label") }
+fun AnimateColor() {
+    var isGray by remember { mutableStateOf(false) }
+    val animateColor = animateColorAsState(
+        targetValue = if (isGray) Color.Gray else Color.Green,
+        animationSpec = tween(durationMillis = 3000)
     )
-}
+    Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
+        Button(onClick = { isGray = !isGray }) {
+            Text(text = "Animate color")
+        }
+        Box(
+            Modifier
+                .size(400.dp)
+                .background(
+                    animateColor.value
+                )
+        ) {
 
-@Composable
-fun myOutLineTextField() {
-    var textValue by remember {
-        mutableStateOf("")
-    }
-    OutlinedTextField(
-        value = textValue, onValueChange = { text -> textValue = text },
-        label = { Text(text = stringResource(R.string.label)) },
-        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedLabelColor = colorResource(id = R.color.purple_500),
-            focusedBorderColor = colorResource(id = R.color.purple_700)
-        )
-    )
-}
-
-//onclick must send
-@Composable
-fun MyButton() {
-    Button(onClick = { /*TODO*/ }
-    )
-
-    {
-        Text(text = "Click Me")
-    }
-}
-
-@Composable
-fun myRadioGroup() {
-    val radioButtons = listOf(0, 1, 2)
-
-    var selectedxtedButton by remember {
-        mutableStateOf(radioButtons.first())
-    }
-    val colors = RadioButtonDefaults.colors(
-        selectedColor = colorResource(id = R.color.purple_500),
-        unselectedColor = colorResource(id = R.color.black)
-    )
-    Column() {
-        radioButtons.forEach { index ->
-            val isSelected = index == selectedxtedButton
-            RadioButton(selected = isSelected, onClick = { selectedxtedButton = index })
         }
 
     }
-}
-
-@Composable
-fun myFloatingActionButton() {
-    FloatingActionButton(
-        onClick = { /*TODO*/ },
-        content = { Text(text = "Fab") },
-        contentColor = colorResource(id = R.color.purple_700)
-    )
-
 
 }
-
-// horizontalArrangement = Arrangement.SpaceBetween order item  horizontal
+@ExperimentalAnimationApi
 @Composable
-fun myRow() {
-    Row(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = Color.Green),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    )
-    {
-        Text(text = "one")
-        Text(text = "tow")
-        Text(text = "three")
+fun MAnimateVisibilty() {
+    var isVisible by remember { mutableStateOf(false) }
 
-    }
-}
-
-@Composable
-fun myColumn() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            //to make scroll
-            .verticalScroll(rememberScrollState())
-            .background(color = Color.Green)
-    )
-    // verticalArrangement = Arrangement.SpaceAround
-
-    {
-        Text(text = "one")
-        Text(text = "tow")
-        Text(text = "three")
-
-    }
-}
-
-//box like frame layout
-@Composable
-fun myBox() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = Color.Green)
-    )
-    // verticalArrangement = Arrangement.SpaceAround
-
-    {
-        Text(
-            text = "one",
-            modifier = Modifier.align(Alignment.TopStart)
-        )
-        Text(
-            text = "tow",
-            modifier = Modifier.align(Alignment.Center)
-        )
-        Text(
-            text = "three",
-            modifier = Modifier.align(Alignment.BottomEnd)
-        )
-
-    }
-}
-//contain only one element
-//like root of app
-
-@Composable
-fun mySufuce() {
-    Surface() {
-
-    }
-}
-
-//scafold
-//topbar compose function so give {}
-@Composable
-fun myScafold() {
-    Scaffold(content = { myRow() },
-        topBar = { myAppBar() }
-    )
-
-
-}
-
-@Composable
-fun myAppBar() {
-    TopAppBar(title = { Text(text = stringResource(id = R.string.app_name)) }, navigationIcon = {
-        IconButton(onClick = { /*TODO*/ },
-            content = { Icon(imageVector = Icons.Default.Menu, contentDescription = "") })
-    }
-    )
-}
-
-@Composable
-fun myLazyColumn() {
-    LazyColumn() {
-        items(items) { item->
-             myRowA(item =item )
+    Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
+        Button(onClick = { isVisible = !isVisible }) {
+            Text(text = "Animate color")
         }
+        AnimatedVisibility(visible = isVisible) {
+            Box(
+                Modifier
+                    .size(400.dp)
+                    .background(
+                        color = Color.Green
+                    )
+            ) {
+
+            }
+        }
+
+
+
     }
 
 }
 
+/*fun MAnimateVisibiltyMoreOption() {
+    var isVisible by remember { mutableStateOf(false) }
+
+    Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
+        Button(onClick = { isVisible = !isVisible }) {
+            Text(text = "Animate color")
+        }
+        AnimatedVisibility(visible = isVisible
+        , enter = expandIn(tween(durationMillis = 3000)),
+            exit = shrinkOut(tween(durationMillis = 300))
+        ) {
+            Box(
+                Modifier
+                    .size(400.dp)
+                    .background(
+                        color = Color.Green
+                    )
+            ) {
+
+            }
+        }
+
+
+
+    }
+
+}*/
 @Composable
-fun myRowA(item: myIcon) {
-    Row() {
-        Image(
-            painter = painterResource(id = item.icon), contentDescription = "",
-            modifier = Modifier
-                .size(70.dp)
-                .padding(4.dp)
-        )
-        Text(text = item.name,modifier = Modifier.align(Alignment.CenterVertically))
+fun MAnimateContentSize() {
+    var isShort by remember { mutableStateOf(true) }
+    val short="Iam hello Iam hello Iam hello Iam hello Iam hello Iam hello"
+    val longtxt="Iam hello Iam hello Iam hello Iam hello Iam hello Iam hello Iam hello Iam hello Iam hello Iam hello Iam hello Iam hello Iam hello Iam hello Iam hello Iam hello Iam hello Iam hello"
+    Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
+        Button(onClick = { isShort = !isShort }) {
+            Text(text = "Animate color")
+        }
+
+            Box(
+                Modifier
+                  //  .size(400.dp)
+                    .padding(20.dp)
+                    .animateContentSize (animationSpec = tween(durationMillis = 300) )
+                    .background(
+                        color = Color.Green
+                    )
+            ) {
+                Text(text = if(isShort) short else longtxt)
+
+        }
+
 
 
     }
 
 }
-
-val items = listOf(
-    myIcon(R.drawable.ic_launcher_background, "test1"),
-    myIcon(R.drawable.ic_launcher_background, "test12")
-)
-
-data class myIcon(val icon: Int, val name: String)
 
 @Composable
 fun MyApp() {

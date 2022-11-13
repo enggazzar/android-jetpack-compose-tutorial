@@ -1,108 +1,49 @@
 package com.ksi.examplecompose
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.*
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.em
-import androidx.compose.ui.unit.sp
 import com.ksi.examplecompose.ui.theme.ExampleComposeTheme
-import com.ksi.examplecompose.ui.theme.customTitle
 import com.ksi.examplecompose.ui.theme.defaultPadding
 import java.util.Collections.list
 /*
-==================================
-Imperative programming vs Declarative programming
-Imperative UI
-This is the most common paradigm. It involves having a separate prototype/model of the application’s UI. This design focuses on the how rather than the what. A good example is XML layouts in Android. We design the widgets and components which are then rendered for the user to see and interact with
-==================================
-Declarative UI
-This pattern is an emerging trend that allows the developers to design the user interface based on the data received. This on the other hand focuses on the what. This design paradigm makes use of one programming language to create an entire application.
- ================================
- Advantages of JetPack Compose
-It is very fast and offers a smooth performance.
+coupling class a and b depend to each other is bad practice
+solid
+s->single responsibility
+class should have one responsibilty and have one reason to change
+benifits
+1- easy testing
+2- lower coupling
+3-easy to understand-clean code
+4- code organized
+5- if function have problem will not effect another if all function in smae class
+o->open close (software entities (classes,module,functions)
+should be open for extention close for modification
+l->liskov substitution
+if s is asubtype of t then objects of type t in aprogram may be replaced with object of type s
+without altering any of the desirsble properites of that programe
 
-It’s simple to learn.
+i-> Interface segregation(seperate)
+splite large interfce to small interface
+so client know only about methods they need
+d->dependency inversion العكسى
+high level module and low model both should depend on abstration
+abstraction should not depend on details but concret class have details
 
-It is possible to interoperate with an imperative approach.
 
-Offers a better way to implement loose coupling principles.
 
-It is 100% made in Kotlin which makes it a modern approach in Android development
-======================================
- Arrangement
-We also have three arrangements that can be applied as vertical and horizontal arrangements:
 
-SpaceEvenly [ a a a ]
-
-SpaceBetween [a a a]
-
-SpaceAround
-=======================================
-There are nine alignment options that can apply to child UI elements
-TopStart  TopCenter  Top End
-CenterStart   Center CenterEnd
-BottomStart     BottomCenter  BottomEnd
-=====================================
-Typography:
-From MaterialTheme, we can reuse the default typography. They customize the textstyle() with various text sizes
-=======================================
-What are Modifiers in Jetpack Compose?
- Modifier elements decorate or add behavior to Compose UI elements. For example, backgrounds, padding and click event listeners decorate or add behavior to rows, text or buttons.
-
-We can give size and spacing with the help of modifiers.
-
-Arrange the widgets within a layout.
-
-Beautify the widgets.
-
-If you are an Android developer,
-Most of the xml attributes (id, padding, margin, color, alpha, ratio, elevation...) are used with the help of modifiers
- =============================================
- Available shapes in Jetpack Compose:
-RectangleShape
-CircleShape
-RoundedCornerShape
-CutCornerShape
-you can check https://www.jetpackcompose.net/buttons-in-jetpack-compose
-==================================
-mutableState -  It return an observable value for Compose. If value changed UI get changed
-=========================================
-LazyRow(
-   verticalArrangement = Arrangement.spacedBy(4.dp),
-) {
-    // ...
-}
-=====================
-What is state in jetpack compose?
-A state is an object it can hold our data. If data changes happen, it will update all its subscribed
-UI widgets. If you want to update the data at runtime in your widgets, you can use the state object.
  */
-
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -110,81 +51,9 @@ class MainActivity : ComponentActivity() {
             ExampleComposeTheme {
                 // A surface container using the 'background' color from the theme
                 //hoistable state remove dublicate state
-                val gradient =
-                    Brush.horizontalGradient(listOf(Color(0xFF28D8A3), Color(0xFF00BEB2)))
-                Surface(color = MaterialTheme.colors.primary) {
-                   Column(modifier = Modifier.background(gradient)) {
 
-                       IconButton(onClick = {  },
-                           modifier = Modifier
-                               .clip(CircleShape)
-                               .border(1.dp, androidx.compose.ui.graphics.Color.Red, shape = CircleShape)
-
-
-                       ) {
-                           Icon(Icons.Default.Add, contentDescription = "content description",tint = androidx.compose.ui.graphics.Color.Red)
-                       }
-
-                       //1. Text Size
-                       Text("hh", fontSize = 10.sp, style = MaterialTheme.typography.customTitle)
-                       //text color
-                       Text("Color text", color = androidx.compose.ui.graphics.Color.Blue)
-                       //Bold Text
-                       Text("Bold text", fontWeight = FontWeight.Bold)
-                       //italic
-                       Text("Italic Text", fontStyle = FontStyle.Italic)
-                       //max line
-                       Text("hello ".repeat(50), maxLines = 2)
-                       //text overflow
-                       Text("Hello Compose ".repeat(50), maxLines = 2, overflow = TextOverflow.Ellipsis)
-                       //Selectable Text
-                       SelectionContainer {
-                           Text("This text is selectable")
-                       }
-
-                       //style
-                       Text(
-                           text = "Hello World",
-                           style = TextStyle(
-                               color = androidx.compose.ui.graphics.Color.Red,
-                               fontSize = 16.sp,
-                               fontFamily = FontFamily.Monospace,
-                               fontWeight = FontWeight.W800,
-                               fontStyle = FontStyle.Italic,
-                               letterSpacing = 0.5.em,
-                               background = androidx.compose.ui.graphics.Color.Blue,
-                               textDecoration = TextDecoration.Underline
-                           )
-                       )
-                       //shadow
-                       Text(
-                           text = "Text with Shadow",
-                           style = TextStyle(
-                               shadow = Shadow(
-                                   color = androidx.compose.ui.graphics.Color.Blue,
-                                   offset = Offset(5f, 5f),
-                                   blurRadius = 5f
-                               )
-                           )
-                       )
-                          //decoration
-                       Text(
-                           text = "Text with Underline",
-                           style = TextStyle(
-                               color =  androidx.compose.ui.graphics.Color.Black, fontSize = 24.sp,
-                               textDecoration = TextDecoration.Underline
-                           )
-                       )
-                      //padding
-                       Text(
-                           "Padding and margin!",
-                           Modifier.padding(32.dp) // Outer padding (margin)
-                               .background(color = androidx.compose.ui.graphics.Color.Green) //background color
-                               .padding(16.dp) // Inner padding
-                       )
-                       //modifier
-
-                   }
+                Surface(color = MaterialTheme.colors.background) {
+                    MyApp()
                 }
             }
         }

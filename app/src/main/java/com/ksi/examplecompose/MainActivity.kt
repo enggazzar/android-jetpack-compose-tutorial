@@ -3,60 +3,31 @@ package com.ksi.examplecompose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CutCornerShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.ksi.examplecompose.ui.theme.ExampleComposeTheme
-import com.ksi.examplecompose.ui.theme.defaultPadding
-import java.util.Collections.list
-/*
-https://www.youtube.com/watch?v=EOQB8PTLkpY&t=219s
-compose phases
-1- compose
-2- layout
-3- draw
-1-donot make operation list of lazy column make it in viewmode or with rememmber
-example
-lazy column(){
-items(contacts.sortby())
-{
-}
-----------
-2-provide key muste be key
-lazy column(){
-items(contacts,key=it.id)
-{
-}
-3-derive state of to remebr state of lazy column like remeber is first item showing
-val lazySatet=remeberlazylistsate()
-lazyColumn(state=lazySatet){
-val showButton by remeber{
-lazystate.firstItemIndex>0
-{
-4-dever read state changed will call Text only when contact value changed
-mycard(contact)
-{
-Text("$contant.name")
-}
-5- running backwards [calculate bal;ance in view model before call compose]
-val balance by remeber{mutablestateOf(0)}
-for(transaction in transactions)
-{
-Row(){
-balance+=tranaction
-Text("balance")
-//donot do this
-
-}
-6- baseline profile
- */
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,102 +36,260 @@ class MainActivity : ComponentActivity() {
             ExampleComposeTheme {
                 // A surface container using the 'background' color from the theme
                 //hoistable state remove dublicate state
+               // mySurface()
 
-                Surface(color = MaterialTheme.colors.background) {
-                    MyApp()
-                }
+                mBottomAppBar()
             }
         }
     }
-}
 
-@Composable
-fun MyApp() {
-    //remeberSeverabale save value even configer of app changed
-    var onBoard by remember {
-        mutableStateOf(true)
-    }
-    if(onBoard){
-        OnboardingScreen({onBoard=false})
-    }else{
-        Greetings()
-    }
+    //note content alingment  arrange child
+    @Composable
+    fun mySurface() {
+        Surface(
+            color = MaterialTheme.colors.primary,
+            shape = CutCornerShape(15.dp),
 
-}
-@Composable
-fun Greetings(names: List<String> =List(1000){"$it"}){
-    Surface(color = MaterialTheme.colors.background) {
-        Column(modifier = Modifier.padding(defaultPadding)) {
-            LazyColumn {
-                items(names){name->
-                    Greeting(name = name)
-                    
-            }
-              
-            }
+            modifier = Modifier
+                .size(250.dp)
+                .padding(10.dp),
+            border = BorderStroke(5.dp, Color.Black),
+            elevation = 22.dp
+        ) {
+            mPadding()
         }
     }
-}
-@Composable
-fun Greeting(name:String){
-    //remember to save last value when recompose happened
-    //mutablestate will recompose element depond on this value
-    //by to delegate
-    var expand by remember {  mutableStateOf(false)}
 
-
-   val expandValue=if(expand) 34.dp else 0.dp
-    Surface(color = MaterialTheme.colors.primary,modifier = Modifier.padding(horizontal = 8.dp ,vertical = 8.dp)) {
-      Row(modifier = Modifier
-          .padding(defaultPadding)) {
-          Column(modifier = Modifier
-              .weight(0.1f)
-              .padding(bottom = expandValue)) {
-              Text(text = "Hello ")
-              Text(text = "$name!")
-          }
-          OutlinedButton(onClick = { expand=!expand }) {
-              Text( if (expand) stringResource(R.string.cc) else "Show More")
-          }
-      }
-
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    ExampleComposeTheme {
-       // MyApp()
-        OnboardingScreen({})
-    }
-}
-@Composable
-fun OnboardingScreen(onContenueClicked:()->Unit) {
-    // TODO: This state should be hoisted
-   // var shouldShowOnboarding by remember { mutableStateOf(true) }
-
-    Surface {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+    @Composable
+    fun mContentAlignment() {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black),
+            contentAlignment = Alignment.Center
 
         ) {
-            Text("Welcome to the Basics Codelab!")
-            Button(
-                modifier = Modifier.padding(vertical = 24.dp),
-                onClick = onContenueClicked
+            Box(
+                modifier = Modifier
+                    .size(300.dp, 300.dp)
+                    .background(Color.White),
+                contentAlignment = Alignment.TopCenter
+
             ) {
-                Text("Continue")
+                Text(text = "Welcome", color = Color.Blue)
             }
         }
     }
-}
-@Preview(showBackground = true, widthDp = 320, heightDp = 320)
-@Composable
-fun OnboardingPreview() {
-    ExampleComposeTheme {
-        OnboardingScreen({})
+
+    //no margin in compose but padding using for both according to order
+    //margin add padding befor background and size
+    @Composable
+    fun mPadding() {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .alpha(0.7f)
+                .background(Color.Black)
+        ) {
+            Text(
+                text = "Welcome", color = Color.Blue,
+                modifier = Modifier
+                    .alpha(0.7f)
+                    .
+                        // clip(CutCornerShape(10.dp)).
+                    padding(20.dp)
+                    . //margin
+                    background(Color.Red)
+                    .padding(10.dp)
+                    . //padding
+                    background(Color.Cyan)
+                    .border(10.dp, color = Color.Blue, RoundedCornerShape(2.dp))
+            )
+        }
+    }
+    //button type 1- button 2- out line button 3-text button 4- icon button
+    //any button need text inside
+
+    @Composable
+    fun mButton() {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Button(onClick = { /*TODO*/ }) {
+                Text(text = "Button")
+            }
+            OutlinedButton(onClick = { /*TODO*/ }) {
+                Text(text = "OutlinedButton")
+            }
+            TextButton(onClick = { /*TODO*/ }) {
+                Icon(
+                    imageVector = Icons.Filled.ExitToApp,
+                    contentDescription = "",
+                    tint = Color.Black
+                )
+                Text(text = "TextButton")
+            }
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(
+                    imageVector = Icons.Filled.ExitToApp,
+                    contentDescription = "",
+                    tint = Color.Black
+                )
+            }
+            Button(
+                onClick = { /*TODO*/ },
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Color.Black,
+                    contentColor = Color.Red
+                )
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.ExitToApp,
+                    contentDescription = "",
+                    tint = Color.White
+                )
+                Spacer(modifier = Modifier.size(30.dp))
+                Text(text = "Button")
+            }
+        }
+    }
+
+    //button shape
+    @Composable
+    fun mButtonShape() {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Button(onClick = { /*TODO*/ }, shape = RoundedCornerShape(topStart = 10.dp)) {
+                Text(text = "Button")
+            }
+            Button(onClick = { /*TODO*/ }, shape = CircleShape, modifier = Modifier.size(60.dp)) {
+                Text(text = "Button")
+            }
+        }
+    }
+
+    //Image have clib with shape to add border
+    //give border shape like clip
+    @Composable
+    fun mImageWithShape() {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Image(
+                painter = painterResource(id = R.mipmap.flowers),
+                contentDescription = "",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .border(width = 2.dp, shape = RoundedCornerShape(10.dp), color = Color.Red)
+            )
+        }
+    }
+
+    //scafold know position of
+    //topBar botton navigate -drawer
+    @Composable
+    fun myScaffold() {
+        Scaffold(
+            topBar = {
+                TopAppBar() {
+                    Text(text = "topBar")
+                }
+            },
+            bottomBar = {
+                BottomAppBar() {
+                    Text(text = "bottom bar")
+                }
+            },
+            content = {
+                mText()
+            }
+
+        )
+    }
+
+    //scafold BottomAppBar used for modile 5 screen with floating action button
+    //buttom navigation 3 to 5 screen mobile and tablet
+    @Preview
+    @Composable
+    fun mBottomAppBar() {
+        var bottomStae by remember {
+            mutableStateOf("Home")
+
+        }
+        Scaffold(
+            
+            bottomBar = {
+            BottomNavigation() {
+                BottomNavigationItem(
+                    selected = bottomStae == "Home",
+                    onClick = { bottomStae = "Home" },
+                    label = { Text(text = "Home") },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Filled.ExitToApp,
+                            contentDescription = "",
+                            tint = Color.White
+                        )
+                    })
+                BottomNavigationItem(
+                    selected = bottomStae == "Account",
+                    onClick = { bottomStae = "Account" },
+                    label = { Text(text = "Account") },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Filled.Call,
+                            contentDescription = "",
+                            tint = Color.White
+                        )
+                    })
+                BottomNavigationItem(
+                    selected = bottomStae == "Exit",
+                    onClick = { bottomStae = "Exit" },
+                    label = { Text(text = "Exit") },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Filled.Email,
+                            contentDescription = "",
+                            tint = Color.White
+                        )
+                    })
+            }
+        }
+
+        ) {
+            Box(modifier = Modifier.fillMaxSize(), Alignment.Center) {
+                Text(text = bottomStae,fontSize = 25.sp)
+                
+            }
+
+        }
+
+    }
+
+    @Composable
+    fun mText() {
+        Text(
+            text = "welcome", color = Color.Green, modifier = Modifier.padding(10.dp)
+        )
+    }
+
+
+    @Composable
+    fun mainPreview() {
+        myScaffold()
     }
 }
+
+
+
+
+

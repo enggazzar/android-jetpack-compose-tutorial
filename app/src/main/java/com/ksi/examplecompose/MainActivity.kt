@@ -34,7 +34,8 @@ https://material.io/design/color/the-color-system.html#tools-for-picking-colors
 https://stackoverflow.com/questions/45879513/what-is-the-difference-between-colorprimary-and-colorprimarydark-in-themes
 https://developer.android.com/reference/kotlin/androidx/compose/material/Typography
 
-
+1- routing 2- no fragment 3- visibilty  4- no more getvalue from  text 5-
+1- routing 2- no fragment 3- visibilty 4- no more getvalue from text 5- coil 6- no adapter  7- main layout column row box
  */
 val defaultPadding=24.dp
 class MainActivity : ComponentActivity() {
@@ -44,7 +45,7 @@ class MainActivity : ComponentActivity() {
             ExampleComposeTheme {
 
                 Surface(color = MaterialTheme.colors.background) {
-                    mPadding()
+                    MarginUsingOrderPadding()
 
                 }
             }
@@ -56,7 +57,7 @@ class MainActivity : ComponentActivity() {
 //margin add padding before background and size
 @Preview()
 @Composable
-fun mPadding() {
+fun MarginUsingOrderPadding() {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -64,16 +65,14 @@ fun mPadding() {
             .background(Color.Black)
     ) {
         Text(
-            text = "Welcome", color = Color.Red,
+            text = "Welcome", color = Color.White,
             modifier = Modifier
                // .alpha(0.7f)
+                // //margin
                 .padding(20.dp)
                 . //margin
                 background(Color.Red)
-                .padding(10.dp)
-                . //padding
-                background(Color.White)
-
+                .padding(5.dp)
         )
     }
 }

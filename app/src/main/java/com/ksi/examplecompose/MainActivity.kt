@@ -4,13 +4,16 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -41,18 +44,37 @@ class MainActivity : ComponentActivity() {
             ExampleComposeTheme {
 
                 Surface(color = MaterialTheme.colors.background) {
-                   MyApp()
+                    mPadding()
 
-
-                 /*   Text(
-                        text = "vv",
-                        style = inputButton.copy(color = if (true) Color.Red else Color.Green)
-                    )*/
-
-                   // MyApp()
                 }
             }
         }
+    }
+}
+
+//no margin in compose but padding using for both according to order
+//margin add padding before background and size
+@Preview()
+@Composable
+fun mPadding() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .alpha(0.7f)
+            .background(Color.Black)
+    ) {
+        Text(
+            text = "Welcome", color = Color.Red,
+            modifier = Modifier
+               // .alpha(0.7f)
+                .padding(20.dp)
+                . //margin
+                background(Color.Red)
+                .padding(10.dp)
+                . //padding
+                background(Color.White)
+
+        )
     }
 }
 @Preview()

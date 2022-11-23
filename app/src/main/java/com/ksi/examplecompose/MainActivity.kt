@@ -38,20 +38,21 @@ https://developer.android.com/reference/kotlin/androidx/compose/material/Typogra
 1- routing 2- no fragment 3- visibilty 4- no more getvalue from text 5- coil 6- no adapter  7- main layout column row box
 2 main layout
  */
-val defaultPadding=24.dp
+val defaultPadding = 24.dp
+
 class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            ExampleComposeTheme {
 
-                Surface(color = MaterialTheme.colors.background) {
-                    MarginUsingOrderPadding()
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContent {
+      ExampleComposeTheme {
 
-                }
-            }
+        Surface(color = MaterialTheme.colors.background) {
+          ExampleVisibility()
         }
+      }
     }
+  }
 }
 
 //no margin in compose but padding using for both according to order
@@ -59,94 +60,128 @@ class MainActivity : ComponentActivity() {
 @Preview()
 @Composable
 fun MarginUsingOrderPadding() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .alpha(0.7f)
-            .background(Color.Black)
-    ) {
-        Text(
-            text = "Welcome", color = Color.White,
-            modifier = Modifier
-               // .alpha(0.7f)
-                // //margin
-                .padding(20.dp)
-                . //margin
-                background(Color.Red)
-                .padding(5.dp)
-        )
-    }
+  Box(
+    modifier = Modifier
+      .fillMaxSize()
+      .alpha(0.7f)
+      .background(Color.Black)
+  ) {
+    Text(
+      text = "Welcome", color = Color.White,
+      modifier = Modifier
+        // .alpha(0.7f)
+        // //margin
+        .padding(20.dp)
+        . //margin
+        background(Color.Red)
+        .padding(5.dp)
+    )
+  }
+}
+
+
+
+@Preview()
+@Composable
+fun Row() {
+
+  Row(
+    modifier = Modifier
+      .fillMaxSize()
+      .background(color = Color.Green),
+    horizontalArrangement = Arrangement.SpaceBetween,
+    verticalAlignment = Alignment.CenterVertically
+  )
+  {
+    Text(text = "one")
+    Text(text = "tow")
+    Text(text = "three")
+
+  }
+}
+
+@Composable
+fun Column() {
+  Column(
+    modifier = Modifier
+      .fillMaxSize()
+      .background(color = Color.Green)
+  )
+  // verticalArrangement = Arrangement.SpaceAround
+
+  {
+    Text(text = "one")
+    Text(text = "tow")
+    Text(text = "three")
+
+  }
+}
+
+//box like frame layout
+@Composable
+fun Box() {
+  Box(
+    modifier = Modifier
+      .fillMaxSize()
+      .background(color = Color.Green)
+  )
+  // verticalArrangement = Arrangement.SpaceAround
+
+  {
+    Text(
+      text = "one",
+      modifier = Modifier.align(Alignment.TopStart)
+    )
+    Text(
+      text = "tow",
+      modifier = Modifier.align(Alignment.Center)
+    )
+    Text(
+      text = "three",
+      modifier = Modifier.align(Alignment.BottomEnd)
+    )
+
+  }
 }
 @Preview()
 @Composable
-fun Row(){
-    Row(modifier= Modifier.fillMaxSize().background(color= Color.Green),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically)
-    {
-        Text(text = "one")
-        Text(text = "tow")
-        Text(text = "three")
+fun ExampleVisibility() {
+  var showText by remember { mutableStateOf(true) }
 
+  Column(modifier = Modifier
+    .fillMaxSize()
+    .padding(20.dp))
+
+  {
+    if (showText) {
+      Text(text = "Welcome", color = Color.Green)
     }
-}
-@Composable
-fun Column(){
-    Column(modifier= Modifier.fillMaxSize().background(color= Color.Green))
-    // verticalArrangement = Arrangement.SpaceAround
-
-    {
-        Text(text = "one")
-        Text(text = "tow")
-        Text(text = "three")
-
+    Button(onClick = { showText = !showText }) {
+      Text(text = "Toggle Visibility", color = Color.White)
     }
+  }
 }
-//box like frame layout
-@Composable
-fun Box(){
-    Box(modifier= Modifier.fillMaxSize().background(color= Color.Green))
-    // verticalArrangement = Arrangement.SpaceAround
-
-    {
-        Text(
-            text = "one",
-            modifier = Modifier.align(Alignment.TopStart)
-        )
-        Text(text = "tow",
-            modifier = Modifier.align(Alignment.Center)
-        )
-        Text(text = "three",
-            modifier = Modifier.align(Alignment.BottomEnd)
-        )
-
-    }
-}
-
 
 @Composable
 fun MyApp() {
-    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-        //style
+  Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+    //style
 
-        Text(text = "inputButton", style = inputButton)
-        Text(text = "body", style = MaterialTheme.typography.body1)
-        Text(text = "customTitle", style = MaterialTheme.typography.customTitle)
-        Text(text = "dropdownText", style = dropdownText(Color.Red))
-        //====color========//
-        Text(text = "color red", color = Color.Red)
-        Text(text = "colors.primary", color = MaterialTheme.colors.primary)
-        //===shape==================//
-        Box(
-            modifier = Modifier
-                .size(100.dp)
-                .clip(MaterialTheme.shapes.medium)
-                .background(Color.Red)
-        )
-    }
-
-
-
+    Text(text = "inputButton", style = inputButton)
+    Text(text = "body", style = MaterialTheme.typography.body1)
+    Text(text = "customTitle", style = MaterialTheme.typography.customTitle)
+    Text(text = "dropdownText", style = dropdownText(Color.Red))
+    //====color========//
+    Text(text = "color red", color = Color.Red)
+    Text(text = "colors.primary", color = MaterialTheme.colors.primary)
+    //===shape==================//
+    Box(
+      modifier = Modifier
+        .size(100.dp)
+        .clip(MaterialTheme.shapes.medium)
+        .background(Color.Red)
+    )
+  }
 }
 
 

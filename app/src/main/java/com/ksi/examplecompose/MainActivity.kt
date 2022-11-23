@@ -36,6 +36,7 @@ https://developer.android.com/reference/kotlin/androidx/compose/material/Typogra
 
 1- routing 2- no fragment 3- visibilty  4- no more getvalue from  text 5-
 1- routing 2- no fragment 3- visibilty 4- no more getvalue from text 5- coil 6- no adapter  7- main layout column row box
+2 main layout
  */
 val defaultPadding=24.dp
 class MainActivity : ComponentActivity() {
@@ -77,6 +78,52 @@ fun MarginUsingOrderPadding() {
     }
 }
 @Preview()
+@Composable
+fun Row(){
+    Row(modifier= Modifier.fillMaxSize().background(color= Color.Green),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically)
+    {
+        Text(text = "one")
+        Text(text = "tow")
+        Text(text = "three")
+
+    }
+}
+@Composable
+fun Column(){
+    Column(modifier= Modifier.fillMaxSize().background(color= Color.Green))
+    // verticalArrangement = Arrangement.SpaceAround
+
+    {
+        Text(text = "one")
+        Text(text = "tow")
+        Text(text = "three")
+
+    }
+}
+//box like frame layout
+@Composable
+fun Box(){
+    Box(modifier= Modifier.fillMaxSize().background(color= Color.Green))
+    // verticalArrangement = Arrangement.SpaceAround
+
+    {
+        Text(
+            text = "one",
+            modifier = Modifier.align(Alignment.TopStart)
+        )
+        Text(text = "tow",
+            modifier = Modifier.align(Alignment.Center)
+        )
+        Text(text = "three",
+            modifier = Modifier.align(Alignment.BottomEnd)
+        )
+
+    }
+}
+
+
 @Composable
 fun MyApp() {
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {

@@ -3,6 +3,7 @@ package com.ksi.examplecompose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -16,9 +17,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.ImagePainter.State.Empty.painter
+import coil.compose.rememberImagePainter
 import com.ksi.examplecompose.ui.theme.ExampleComposeTheme
 import com.ksi.examplecompose.ui.theme.customTitle
 import com.ksi.examplecompose.ui.theme.dropdownText
@@ -161,6 +166,27 @@ fun ExampleVisibility() {
     }
   }
 }
+@OptIn(ExperimentalCoilApi::class)
+@Preview()
+@Composable
+fun ExampleCoil() {
+
+  val painter =rememberImagePainter(data = "https://images.unsplash.com/photo-1628373383885-4be0bc0172fa?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1301&q=80")
+
+  Column(modifier = Modifier
+    .fillMaxSize()
+    .padding(20.dp))
+
+  {
+    Image(
+      painter = painter,
+      contentDescription = "Forest Image",
+      modifier = Modifier.width(90.dp).height(90.dp),
+      contentScale = ContentScale.Crop
+    )
+  }
+}
+
 
 @Composable
 fun MyApp() {

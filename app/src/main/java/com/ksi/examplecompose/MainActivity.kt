@@ -232,13 +232,13 @@ fun myRowA(item: myIcon) {
     }
 
 }
-
 val items = listOf(
     myIcon(R.drawable.ic_launcher_background, "test1"),
     myIcon(R.drawable.ic_launcher_background, "test12")
 )
 
 data class myIcon(val icon: Int, val name: String)
+
 
 @Composable
 fun MyApp() {

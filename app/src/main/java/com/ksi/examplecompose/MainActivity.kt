@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -181,12 +182,56 @@ fun ExampleCoil() {
     Image(
       painter = painter,
       contentDescription = "Forest Image",
-      modifier = Modifier.width(90.dp).height(90.dp),
+      modifier = Modifier
+        .width(90.dp)
+        .height(90.dp),
       contentScale = ContentScale.Crop
     )
   }
 }
+@Preview()
+@Composable
+fun ExampleLazyColumn() {
+  LazyColumn(modifier = Modifier
+    .fillMaxSize()
+    .padding(20.dp)) {
 
+
+    items(items) { item->
+     RowA(item =item )
+    }
+
+    item { MyApp() }
+
+    items(items) { item->
+      RowA(item =item )
+    }
+  }
+
+
+}
+
+@Composable
+fun RowA(item: myIcon) {
+  Row() {
+    Image(
+      painter = painterResource(id = item.icon), contentDescription = "",
+      modifier = Modifier
+        .size(70.dp)
+        .padding(4.dp)
+    )
+    Text(text = item.name,modifier = Modifier.align(Alignment.CenterVertically))
+
+
+  }
+
+}
+val items = listOf(
+  myIcon(R.drawable.ic_launcher_background, "test1"),
+  myIcon(R.drawable.ic_launcher_background, "test12")
+)
+
+data class myIcon(val icon: Int, val name: String)
 
 @Composable
 fun MyApp() {

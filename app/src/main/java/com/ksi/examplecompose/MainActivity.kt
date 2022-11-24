@@ -240,6 +240,16 @@ val items = listOf(
 data class myIcon(val icon: Int, val name: String)
 
 @Composable
+fun myTextField() {
+  var textValue by remember {
+    mutableStateOf("")
+  }
+  TextField(value = textValue, onValueChange = { text -> textValue = text },
+    label = { Text(text = "this label") }
+  )
+}
+
+@Composable
 fun MyApp() {
   Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
     //style

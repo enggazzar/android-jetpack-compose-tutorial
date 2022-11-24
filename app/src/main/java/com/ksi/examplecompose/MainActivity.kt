@@ -40,9 +40,15 @@ https://material.io/design/color/the-color-system.html#tools-for-picking-colors
 https://stackoverflow.com/questions/45879513/what-is-the-difference-between-colorprimary-and-colorprimarydark-in-themes
 https://developer.android.com/reference/kotlin/androidx/compose/material/Typography
 
-1- routing 2- no fragment 3- visibilty  4- no more getvalue from  text 5-
-1- routing 2- no fragment 3- visibilty 4- no more getvalue from text 5- coil 6- no adapter  7- main layout column row box
-2 main layout
+1- No more margin but we Have order padding to make margin
+2-Main layout (Row-Column-Box)
+3-No more visibilty gone ()
+4- load image (coil)
+5- No more adapter and rv(Lazy row-Lazy column)
+6- No more getText
+7-Navigation
+
+
  */
 val defaultPadding = 24.dp
 

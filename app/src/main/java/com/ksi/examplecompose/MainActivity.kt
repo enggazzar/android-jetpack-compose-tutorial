@@ -44,7 +44,7 @@ https://developer.android.com/reference/kotlin/androidx/compose/material/Typogra
 2-Main layout (Row-Column-Box)
 3-No more visibilty gone ()
 4- load image (coil)
-5- No more adapter and rv(Lazy row-Lazy column)
+5- No more adapter and RecyclerView(Lazy row-Lazy column)
 6- No more getText
 7-Navigation (between screens no more fragment or start activity)
 

@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -105,6 +106,17 @@ fun Row() {
     verticalAlignment = Alignment.CenterVertically
   )
   {
+    val colorCyan = Color.Cyan
+    val colorBlack = Color.Black
+    val colorBlue = Color.Blue
+    val colorMagenta = Color.Magenta
+
+    // Creating a Radial Gradient Color
+
+    Icon(
+      painter = painterResource(id = R.drawable.ic_launcher_background),
+      contentDescription = null // decorative element
+    )
     Text(text = "one")
     Text(text = "tow")
     Text(text = "three")
